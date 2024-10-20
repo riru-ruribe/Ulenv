@@ -1,0 +1,14 @@
+{
+  "name": "riru.ruribe.ulenv",
+  "displayName": "Ulenv",
+  "version": "1.0.0",
+  "description": "simple models that abstracts the scene environment.",
+  "author": {
+    "name": "riru ruribe",
+    "url": "https://github.com/riru-ruribe"
+  },
+  "license": "MIT",
+  "documentationUrl": "https://github.com/riru-ruribe/Ulenv",
+  "keywords": [],
+  "dependencies": {}
+}
