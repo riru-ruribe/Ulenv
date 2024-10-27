@@ -26,6 +26,7 @@ namespace Ulenv
             if (++sCount == 0) sLoop++;
             return new(sCount, sLoop);
         }
+        public static readonly Unique Zero = new();
         public static bool operator ==(Unique a, Unique b) => a.loop == b.loop && a.count == b.count;
         public static bool operator !=(Unique a, Unique b) => a.loop != b.loop || a.count != b.count;
         public static bool operator >(Unique a, Unique b) => a.loop != b.loop ? a.loop > b.loop : a.count > b.count;
