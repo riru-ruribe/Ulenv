@@ -16,7 +16,7 @@ namespace Ulenv
         public override bool Equals(object o) => throw new NotImplementedException();
         public override int GetHashCode() => 0;
         public override string ToString() => $"{loop},{count}";
-        Unique(Count count, Loop loop)
+        public Unique(Count count, Loop loop)
         {
             this.count = count;
             this.loop = loop;
