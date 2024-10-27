@@ -20,6 +20,11 @@ namespace Ulenv
             return groupMap[groupName];
         }
 
+        public T GetGroup<T>(string groupName = null) where T : IGroup
+        {
+            return (T)groupMap[groupName ?? typeof(T).Name];
+        }
+
         public void AddGroup(IGroup group)
         {
             UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(group.GroupName));
@@ -30,10 +35,15 @@ namespace Ulenv
 
         public IGroup CreateGroup(IGroup prefab)
         {
+            return CreateGroup<IGroup>(prefab);
+        }
+
+        public T CreateGroup<T>(IGroup prefab) where T : IGroup
+        {
             UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(prefab.GroupName));
             var group = GameObject
                 .Instantiate(prefab.gameObject, transform, false)
-                .GetComponent<IGroup>();
+                .GetComponent<T>();
             group.Initialize(this);
             groupMap[group.GroupName] = group;
             return group;

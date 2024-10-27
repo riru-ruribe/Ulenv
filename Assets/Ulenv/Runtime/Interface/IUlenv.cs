@@ -9,9 +9,15 @@ namespace Ulenv
     {
         Camera RootCamera { get; }
         Transform RootTransform { get; }
+
         IGroup GetGroup(string groupName);
+        T GetGroup<T>(string groupName = null) where T : IGroup;
+
         void AddGroup(IGroup group);
+
         IGroup CreateGroup(IGroup prefab);
+        T CreateGroup<T>(IGroup prefab) where T : IGroup;
+
         void RemoveGroup(string groupName);
     }
 }
