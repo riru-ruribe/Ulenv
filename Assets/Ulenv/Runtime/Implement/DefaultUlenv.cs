@@ -15,15 +15,10 @@ namespace Ulenv
         public Camera RootCamera => rootCamera;
         public Transform RootTransform => transform;
 
-        public IGroup GetGroup(string groupName)
-        {
-            return groupMap[groupName];
-        }
+        public IGroup GetGroup(string groupName) => groupMap[groupName];
 
         public T GetGroup<T>(string groupName = null) where T : IGroup
-        {
-            return (T)groupMap[groupName ?? typeof(T).Name];
-        }
+            => (T)groupMap[groupName ?? typeof(T).Name];
 
         public void AddGroup(IGroup group)
         {
@@ -33,10 +28,7 @@ namespace Ulenv
             groupMap[group.GroupName] = group;
         }
 
-        public IGroup CreateGroup(IGroup prefab)
-        {
-            return CreateGroup<IGroup>(prefab);
-        }
+        public IGroup CreateGroup(IGroup prefab) => CreateGroup<IGroup>(prefab);
 
         public T CreateGroup<T>(IGroup prefab) where T : IGroup
         {
