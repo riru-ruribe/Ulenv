@@ -22,22 +22,22 @@ namespace Ulenv
 
         public void AddGroup(IGroup group)
         {
-            UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(group.GroupName));
+            UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(group.Name));
             group.transform.SetParent(transform);
             group.Initialize(this);
-            groupMap[group.GroupName] = group;
+            groupMap[group.Name] = group;
         }
 
         public IGroup CreateGroup(IGroup prefab) => CreateGroup<IGroup>(prefab);
 
         public T CreateGroup<T>(IGroup prefab) where T : IGroup
         {
-            UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(prefab.GroupName));
+            UnityEngine.Assertions.Assert.IsFalse(groupMap.ContainsKey(prefab.Name));
             var group = GameObject
                 .Instantiate(prefab.gameObject, transform, false)
                 .GetComponent<T>();
             group.Initialize(this);
-            groupMap[group.GroupName] = group;
+            groupMap[group.Name] = group;
             return group;
         }
 
@@ -52,7 +52,7 @@ namespace Ulenv
         {
             foreach (var group in initialGroups.Select(x => x.GetComponent<IGroup>()))
             {
-                groupMap[group.GroupName] = group;
+                groupMap[group.Name] = group;
             }
             foreach (var group in groupMap.Values)
             {
