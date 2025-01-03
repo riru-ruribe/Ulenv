@@ -7,6 +7,16 @@ namespace Ulenv
         IEnumerable<Unique> IModuleMap.Keys => Keys;
         IEnumerable<object> IModuleMap.Values => Values;
         public T Get<T>(Unique key) => (T)this[key];
+        public bool TryGetValue<T>(Unique key, out T value)
+        {
+            if (TryGetValue(key, out var obj))
+            {
+                value = (T)obj;
+                return true;
+            }
+            value = default;
+            return false;
+        }
         public ModuleMap() : base(new UniqueComparer()) { }
     }
 }

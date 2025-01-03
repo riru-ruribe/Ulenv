@@ -13,6 +13,6 @@ namespace Ulenv
         IEnumerable<object> Values { get; }
         T Get<T>(Unique key);
         bool ContainsKey(Unique key);
-        bool TryGetValue(Unique key, out object value);
+        bool TryGetValue<T>(Unique key, out T value);
     }
 }
