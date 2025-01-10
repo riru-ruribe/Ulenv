@@ -8,11 +8,12 @@ namespace Ulenv
     /// </summary>
     public interface IModuleMap
     {
-        object this[Unique key] { get; }
+        object this[Unique key] { get; set; }
         IEnumerable<Unique> Keys { get; }
         IEnumerable<object> Values { get; }
         T Get<T>(Unique key);
         bool ContainsKey(Unique key);
+        bool Remove(Unique key);
         bool TryGetValue<T>(Unique key, out T value);
     }
 }

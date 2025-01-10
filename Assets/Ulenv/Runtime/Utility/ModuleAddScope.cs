@@ -5,12 +5,12 @@ namespace Ulenv
 {
     public readonly struct ModuleAddScope : IDisposable
     {
-        readonly ModuleMap moduleMap;
+        readonly IModuleMap moduleMap;
         readonly Unique unique;
 
         public void Dispose() => moduleMap.Remove(unique);
 
-        public ModuleAddScope(ModuleMap moduleMap, Unique unique)
+        public ModuleAddScope(IModuleMap moduleMap, Unique unique)
         {
             this.moduleMap = moduleMap;
             this.unique = unique;
@@ -20,7 +20,7 @@ namespace Ulenv
     public static class ModuleMapExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ModuleAddScope AddScoped(this ModuleMap self, Unique unique, object value)
+        public static ModuleAddScope AddScoped(this IModuleMap self, Unique unique, object value)
         {
             self[unique] = value;
             return new(self, unique);
