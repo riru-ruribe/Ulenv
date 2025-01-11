@@ -68,12 +68,14 @@ using Ulenv;
 {
     internal static Unique Unique => new({{count}}, {{loop}});
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static {{className}} From(IModuleMap moduleMap) => ({{className}})moduleMap[Unique];
+    public static {{className}} From(IModuleMap m) => ({{className}})m[Unique];
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool From(IModuleMap m, out {{className}} x) => m.TryGetValue(Unique, out x);
 }
 {{accessibility}} static class _{{count}}_{{loop}}
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ModuleAddScope Resolve(this {{className}} x, IModuleMap y) => y.AddScoped({{className}}.Unique, x);
+    public static ModuleAddScope Resolve(this {{className}} x, IModuleMap m) => m.AddScoped({{className}}.Unique, x);
 }
 {{(isNamespace ? "}" : "")}}
 """);
