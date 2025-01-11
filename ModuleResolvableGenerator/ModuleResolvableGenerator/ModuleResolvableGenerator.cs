@@ -17,7 +17,7 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
 
         var source = context.SyntaxProvider.ForAttributeWithMetadataName(
             AtrDisp,
-            static (node, token) => node is ClassDeclarationSyntax,
+            static (node, token) => node is ClassDeclarationSyntax or InterfaceDeclarationSyntax,
             static (context, token) => context
         );
         context.RegisterSourceOutput(source, Emit);
@@ -64,7 +64,7 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
 using System.Runtime.CompilerServices;
 using Ulenv;
 {{(isNamespace ? $$"""namespace {{typeSymbol.ContainingNamespace}} {""" : "")}}
-{{accessibility}} partial class {{className}} : IModuleResolvable
+{{accessibility}} partial {{typeNode.Keyword}} {{className}} : IModuleResolvable
 {
     public static Unique Unique => new({{count}}, {{loop}});
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,7 +94,7 @@ using Ulenv;
 using System;
 namespace {{Ns}}
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
     internal sealed class {{Atr}} : Attribute
     {
         /// <param name="loop">second argument of 'Unique' constructor.</param>
