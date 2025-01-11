@@ -64,13 +64,16 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
 using System.Runtime.CompilerServices;
 using Ulenv;
 {{(isNamespace ? $$"""namespace {{typeSymbol.ContainingNamespace}} {""" : "")}}
-{{accessibility}} partial {{typeNode.Keyword}} {{className}} : IModuleResolvable
+{{accessibility}} partial {{typeNode.Keyword}} {{className}}
 {
-    public static Unique Unique => new({{count}}, {{loop}});
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ModuleAddScope Resolve(IModuleMap moduleMap) => moduleMap.AddScoped(Unique, this);
+    internal static Unique Unique => new({{count}}, {{loop}});
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static {{className}} From(IModuleMap moduleMap) => ({{className}})moduleMap[Unique];
+}
+{{accessibility}} static class _{{count}}_{{loop}}
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ModuleAddScope Resolve(this {{className}} x, IModuleMap y) => y.AddScoped({{className}}.Unique, x);
 }
 {{(isNamespace ? "}" : "")}}
 """);
