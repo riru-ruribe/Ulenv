@@ -1,36 +1,33 @@
 ﻿#if EXIST_REFMATA
 using RefMata;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Ulenv
 {
     [RefMatable]
-    public sealed partial class ModuleResolver : MonoBehaviour
+    public sealed partial class ModuleResolver : MonoBehaviour, IDisposable
     {
-        [RefMataChild(true, "Where(x => x.GetComponent<IModuleResolvable>() != null)")]
+        [RefMataChild(true, "Where(x => x.GetComponent<IResolvable>() != null)")]
         [SerializeField] GameObject[] resolvables = default;
 
-        readonly List<ModuleAddScope> scopes = new();
+        readonly List<ModuleScope> scopes = new();
 
         public void Resolve(IModuleMap moduleMap)
         {
             for (int i = 0; i < resolvables.Length; i++)
-            {
-                var go = resolvables[i];
-                var resolvable = go.GetComponent<IModuleResolvable>();
-                scopes.Add(moduleMap.AddScoped(resolvable.Unique, resolvable));
-            }
+                scopes.Add(moduleMap.Resolve(resolvables[i].GetComponent<IResolvable>()));
         }
 
-        void OnDestroy()
+        public void Dispose()
         {
             for (int i = 0; i < scopes.Count; i++)
-            {
                 scopes[i].Dispose();
-            }
             scopes.Clear();
         }
+
+        void OnDestroy() => Dispose();
     }
 }
 #endif

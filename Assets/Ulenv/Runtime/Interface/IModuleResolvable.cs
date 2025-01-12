@@ -1,9 +1,10 @@
 ﻿namespace Ulenv
 {
     /// <summary>
-    /// コンポーネントが自動解決されます
+    /// モジュール自動解決モデルです
     /// </summary>
-    public interface IModuleResolvable : IUnique, IComponent
+    public interface IResolvable
     {
+        Unique Unique { get; }
     }
 }
