@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Ulenv
 {
-    public sealed class Result<T> : IResult<T>
+    public class Result<T> : IResult<T>
     {
         readonly IEqualityComparer<T> comparer;
         T value;
