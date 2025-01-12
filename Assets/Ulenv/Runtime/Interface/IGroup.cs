@@ -6,7 +6,6 @@
     /// </summary>
     public interface IGroup : IComponent
     {
-        string Name { get; }
         void Initialize(IUlenv env);
     }
 }
