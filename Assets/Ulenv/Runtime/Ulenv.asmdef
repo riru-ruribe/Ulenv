@@ -2,7 +2,8 @@
     "name": "Ulenv",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:4db97cf7c8a574730ad0e59e93272439"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,6 +12,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "riru.ruribe.refmata",
+            "expression": "",
+            "define": "EXIST_REFMATA"
+        }
+    ],
     "noEngineReferences": false
 }

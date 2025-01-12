@@ -10,6 +10,7 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
     const string Ns = "Ulenv";
     const string Atr = "ModuleResolvableAttribute";
     const string AtrDisp = $"{Ns}.{Atr}";
+    const string MonoDisp = "UnityEngine.MonoBehaviour";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -57,6 +58,8 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
             }
         }
 
+        var isMono = typeSymbol.IsParent(MonoDisp);
+
         var isNamespace = !typeSymbol.ContainingNamespace.IsGlobalNamespace;
 
         context.AddSource($"{className}.ModuleResolvable.g.cs", $$"""
@@ -64,9 +67,9 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
 using System.Runtime.CompilerServices;
 using Ulenv;
 {{(isNamespace ? $$"""namespace {{typeSymbol.ContainingNamespace}} {""" : "")}}
-{{accessibility}} partial {{typeNode.Keyword}} {{className}}
+{{accessibility}} partial {{typeNode.Keyword}} {{className}}{{(isMono ? " : IModuleResolvable" : "")}}
 {
-    internal static Unique Unique => new({{count}}, {{loop}});
+    internal static Unique Unique => new({{count}}, {{loop}});{{(isMono ? "\n    Unique IUnique.Unique => Unique;" : "")}}
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static {{className}} From(IModuleMap m) => ({{className}})m[Unique];
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
