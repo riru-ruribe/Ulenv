@@ -20,6 +20,16 @@ namespace Ulenv
                 scopes.Add(moduleMap.Resolve(resolvables[i].GetComponent<IResolvable>()));
         }
 
+        public void Resolve(IUlenv env, IModuleMap moduleMap)
+        {
+            for (int i = 0; i < resolvables.Length; i++)
+            {
+                var resolvable = resolvables[i].GetComponent<IResolvable>();
+                scopes.Add(moduleMap.Resolve(resolvable));
+                (resolvable as IAwakable)?.Awaken(env, moduleMap);
+            }
+        }
+
         public void Dispose()
         {
             for (int i = 0; i < scopes.Count; i++)
