@@ -14,7 +14,7 @@ namespace Ulenv
         T Get<T>(Unique key);
         bool ContainsKey(Unique key);
         bool Remove(Unique key);
-        bool Remove<T>(Unique key, out T value);
+        bool Remove(Unique key, out object value);
         bool TryGetValue<T>(Unique key, out T value);
     }
 }

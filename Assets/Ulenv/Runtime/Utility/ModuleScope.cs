@@ -10,7 +10,8 @@ namespace Ulenv
 
         public void Dispose()
         {
-            if (moduleMap.Remove(unique, out IDisposable d))
+            if (moduleMap.Remove(unique, out var obj) &&
+                obj is IDisposable d)
                 d.Dispose();
         }
 
