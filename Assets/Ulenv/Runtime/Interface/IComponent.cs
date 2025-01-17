@@ -1,4 +1,5 @@
 ﻿#pragma warning disable IDE1006
+using System.Threading;
 using UnityEngine;
 
 namespace Ulenv
@@ -10,5 +11,6 @@ namespace Ulenv
     {
         GameObject gameObject { get; }
         Transform transform { get; }
+        CancellationToken destroyCancellationToken { get; }
     }
 }
