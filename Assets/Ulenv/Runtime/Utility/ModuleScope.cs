@@ -8,7 +8,11 @@ namespace Ulenv
         readonly IModuleMap moduleMap;
         readonly Unique unique;
 
-        public void Dispose() => moduleMap.Remove(unique);
+        public void Dispose()
+        {
+            if (moduleMap.Remove(unique, out IDisposable d))
+                d.Dispose();
+        }
 
         public ModuleScope(IModuleMap moduleMap, Unique unique)
         {
