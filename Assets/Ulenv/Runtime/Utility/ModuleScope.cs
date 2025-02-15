@@ -8,6 +8,12 @@ namespace Ulenv
         readonly IModuleMap moduleMap;
         readonly Unique unique;
 
+        public bool IsValid
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => moduleMap != null;
+        }
+
         public void Dispose()
         {
             if (moduleMap.Remove(unique, out var obj) &&
