@@ -40,10 +40,10 @@ namespace Ulenv
     {
         [SerializeField] Count count;
         [SerializeField] Loop loop;
-        public bool Equals(SerialUnique other) => count == other.count && loop == other.loop;
-        public override bool Equals(object o) => throw new NotImplementedException();
-        public override int GetHashCode() => 0;
-        public override string ToString() => $"{loop},{count}";
+        public readonly bool Equals(SerialUnique other) => count == other.count && loop == other.loop;
+        public readonly override bool Equals(object o) => throw new NotImplementedException();
+        public readonly override int GetHashCode() => 0;
+        public readonly override string ToString() => $"{loop},{count}";
         public SerialUnique(Count count, Loop loop)
         {
             this.count = count;
@@ -57,9 +57,5 @@ namespace Ulenv
         public static bool operator ==(SerialUnique a, Unique b) => (Unique)a == b;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(SerialUnique a, Unique b) => (Unique)a != b;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(Unique a, SerialUnique b) => a == (Unique)b;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(Unique a, SerialUnique b) => a != (Unique)b;
     }
 }

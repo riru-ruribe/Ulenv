@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 namespace Ulenv
 {
@@ -8,7 +7,7 @@ namespace Ulenv
     /// </summary>
     public interface ICancelUnique : IDisposable
     {
-        CancellationToken CancellationToken { get; }
+        VersionToken VersionToken { get; }
         Unique Unique { get; }
     }
 }

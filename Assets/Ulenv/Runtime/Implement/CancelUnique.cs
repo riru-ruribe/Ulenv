@@ -4,10 +4,12 @@ namespace Ulenv
 {
     public sealed class CancelUnique : ICancelUnique
     {
-        readonly CancellationTokenSource cancellationTokenSource = new();
-        public CancellationToken CancellationToken => cancellationTokenSource.Token;
+        static readonly VersionTokenSource source = new();
+        readonly CancellationToken ct;
+        public VersionToken VersionToken => source.Token(ct);
         public Unique Unique { get; }
-        public void Dispose() => cancellationTokenSource.Cancel();
+        public void Dispose() => source.Progress();
         public CancelUnique(Unique unique) => Unique = unique;
+        public CancelUnique(Unique unique, CancellationToken ct) : this(unique) => this.ct = ct;
     }
 }
