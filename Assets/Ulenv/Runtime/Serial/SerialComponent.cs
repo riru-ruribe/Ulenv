@@ -22,7 +22,7 @@ namespace Ulenv
                 UnityEditor.EditorUtility.SetDirty(this);
             }
         }
-        protected virtual void OnDestroy()
+        protected void OnDestroy()
         {
             if (UnityEditor.EditorApplication.isPlaying || !SerialMap.Staging) return;
             SerialMap.Remove(savedPath);
