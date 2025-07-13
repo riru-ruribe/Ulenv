@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Ulenv;
 
 namespace ModuleResolvableGenerator;
 
@@ -10,7 +11,6 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
     const string Ns = "Ulenv";
     const string Atr = "ModuleResolvableAttribute";
     const string AtrDisp = $"{Ns}.{Atr}";
-    const string MonoDisp = "UnityEngine.MonoBehaviour";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -47,7 +47,7 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
             return;
         }
 
-        var count = GetCustomHash(typeSymbol.ToDisplayString());
+        var count = SerialHash.Get(typeSymbol.ToDisplayString());
         var loop = 0uL;
         foreach (var atr in typeSymbol.GetAttributes())
         {
@@ -78,17 +78,6 @@ using Ulenv;
 }
 {{(isNamespace ? "}" : "")}}
 """);
-    }
-
-    static ulong GetCustomHash(string str)
-    {
-        ulong hash = 0;
-        for (int i = 0; i < str.Length; i++)
-        {
-            hash *= 31;
-            hash += str[i];
-        }
-        return hash;
     }
 
     static string PostAtr()
