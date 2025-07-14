@@ -33,7 +33,7 @@ namespace Ulenv
 
         internal static bool Staging;
 
-        internal static bool Any(string oldPath)
+        internal static bool Any(string oldPath, SerialUnique unique)
         {
             if (Asset is not { } asset)
             {
@@ -41,8 +41,8 @@ namespace Ulenv
                 return false;
             }
             for (int i = 0; i < asset.units.Count; i++)
-                if (asset.units[i].Path == oldPath)
-                    return true;
+                if (asset.units[i] is { } x && x.Path == oldPath)
+                    return x.Unique == unique;
             return false;
         }
 

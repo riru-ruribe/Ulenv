@@ -12,9 +12,9 @@ namespace Ulenv
 #if UNITY_EDITOR
         void LateUpdate()
         {
-            if (UnityEditor.EditorApplication.isPlaying) return;
+            if (UnityEditor.EditorApplication.isPlaying || SerialMap.Asset == null) return;
             var path = transform.NameWithRoot();
-            if (savedPath != path || !SerialMap.Any(savedPath))
+            if (savedPath != path || !SerialMap.Any(savedPath, unique))
             {
                 unique = new(SerialHash.Get(path), typeof(T).ToSerialHash());
                 SerialMap.Replace(savedPath, path, unique);
@@ -24,7 +24,7 @@ namespace Ulenv
         }
         protected void OnDestroy()
         {
-            if (UnityEditor.EditorApplication.isPlaying || !SerialMap.Staging) return;
+            if (UnityEditor.EditorApplication.isPlaying || SerialMap.Asset == null || !SerialMap.Staging) return;
             SerialMap.Remove(savedPath);
         }
 #endif
