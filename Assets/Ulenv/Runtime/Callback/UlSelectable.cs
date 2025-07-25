@@ -8,7 +8,7 @@ namespace Ulenv
 #if EXIST_REFMATA
     [RefMata.RefMatable]
 #endif
-    public sealed partial class UlSelectable : MonoBehaviour,
+    public sealed partial class UlSelectable : MonoBehaviour, IUlCallbackHolder,
         IPointerEnterHandler, IPointerExitHandler,
         IPointerDownHandler, IPointerUpHandler,
         IPointerClickHandler
@@ -32,11 +32,7 @@ namespace Ulenv
             }
         }
 
-        internal UlCallback Callback
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => callback = value;
-        }
+        UlCallback IUlCallbackHolder.Callback { set => callback = value; }
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
