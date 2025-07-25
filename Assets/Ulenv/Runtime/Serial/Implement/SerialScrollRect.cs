@@ -1,13 +1,17 @@
-﻿using RefMata;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Ulenv
 {
-    [RefMatable]
+#if EXIST_REFMATA
+    [RefMata.RefMatable]
+#endif
     sealed partial class SerialScrollRect : SerialComponent<ScrollRect>
     {
-        [SerializeField, RefMataMe] ScrollRect value = default;
+#if EXIST_REFMATA
+        [RefMata.RefMataMe]
+#endif
+        [SerializeField] ScrollRect value = default;
         public override ScrollRect Value => value;
     }
 }

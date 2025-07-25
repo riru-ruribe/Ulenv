@@ -1,11 +1,12 @@
-﻿using RefMata;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Ulenv
 {
-    [RefMatable]
+#if EXIST_REFMATA
+    [RefMata.RefMatable]
+#endif
     public sealed partial class SerialNobody : SerialComponent<SerialNobody>, IAwakable, IDisposable
     {
         [SerializeReference, InterfaceField] INobodyResolvable resolvable = default;

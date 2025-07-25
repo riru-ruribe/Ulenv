@@ -1,15 +1,17 @@
-﻿#if EXIST_REFMATA
-using RefMata;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Ulenv
 {
-    [RefMatable]
+#if EXIST_REFMATA
+    [RefMata.RefMatable]
+#endif
     public sealed partial class ModuleResolver : MonoBehaviour, IDisposable
     {
-        [RefMataChild(true, "Where(x => x.GetComponent<IResolvable>() != null)")]
+#if EXIST_REFMATA
+        [RefMata.RefMataChild(true, "Where(x => x.GetComponent<IResolvable>() != null)")]
+#endif
         [SerializeField] GameObject[] resolvables = default;
 
         readonly List<ModuleScope> scopes = new();
@@ -40,4 +42,3 @@ namespace Ulenv
         void OnDestroy() => Dispose();
     }
 }
-#endif

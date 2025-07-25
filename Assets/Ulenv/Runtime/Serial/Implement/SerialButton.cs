@@ -1,13 +1,17 @@
-﻿using RefMata;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Ulenv
 {
-    [RefMatable]
+#if EXIST_REFMATA
+    [RefMata.RefMatable]
+#endif
     sealed partial class SerialButton : SerialComponent<Button>
     {
-        [SerializeField, RefMataMe] Button value = default;
+#if EXIST_REFMATA
+        [RefMata.RefMataMe]
+#endif
+        [SerializeField] Button value = default;
         public override Button Value => value;
     }
 }

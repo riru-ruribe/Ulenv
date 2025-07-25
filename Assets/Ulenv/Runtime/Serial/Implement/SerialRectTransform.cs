@@ -1,12 +1,16 @@
-﻿using RefMata;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Ulenv
 {
-    [RefMatable]
+#if EXIST_REFMATA
+    [RefMata.RefMatable]
+#endif
     sealed partial class SerialRectTransform : SerialComponent<RectTransform>
     {
-        [SerializeField, RefMataMe] RectTransform value = default;
+#if EXIST_REFMATA
+        [RefMata.RefMataMe]
+#endif
+        [SerializeField] RectTransform value = default;
         public override RectTransform Value => value;
     }
 }
