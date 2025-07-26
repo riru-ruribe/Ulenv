@@ -9,6 +9,7 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
     UlUnsafeCallback* ptr;
     readonly int capacity;
     int length;
+    public static UlUnsafeCallbackArray Dummy = new();
     public readonly int Length
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
