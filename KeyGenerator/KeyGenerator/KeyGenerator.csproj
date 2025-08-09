@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Compile Include="..\..\UlenvKit\UlenvKit\SerialHash.cs" />
+    <Compile Include="..\..\UlenvKit\UlenvKit\UlKeyGenTypes.cs" />
   </ItemGroup>
 
 </Project>
