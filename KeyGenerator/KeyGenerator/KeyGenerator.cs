@@ -62,6 +62,7 @@ public sealed class KeyGenerator : IIncrementalGenerator
         var unityRoot = sourcePath.Replace(sourcePath.Substring(sourcePath.IndexOf("Assets")), "");
 
         byte? type = null;
+        var relativePath = string.Empty;
         var filePath = string.Empty;
         HashSet<string> extensions = default!;
         foreach (var atr in typeSymbol.GetAttributes())
@@ -74,7 +75,8 @@ public sealed class KeyGenerator : IIncrementalGenerator
                 {
                     type = null;
                 }
-                filePath = unityRoot + atr.ConstructorArguments[1].Value!.ToString();
+                relativePath = atr.ConstructorArguments[1].Value!.ToString();
+                filePath = unityRoot + relativePath;
                 extensions = new(atr.ConstructorArguments[2].Values.Select(x => x.Value!.ToString()));
                 break;
             }
@@ -183,7 +185,7 @@ public sealed class KeyGenerator : IIncrementalGenerator
                 break;
         }
 
-        var count = SerialHash.Get(filePath);
+        var count = SerialHash.Get(relativePath);
         var isNamespace = !typeSymbol.ContainingNamespace.IsGlobalNamespace;
 
         context.AddSource($"{className}.UlKeyGen.g.cs", $$"""
