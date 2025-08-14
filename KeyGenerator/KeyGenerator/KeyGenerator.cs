@@ -62,22 +62,40 @@ public sealed class KeyGenerator : IIncrementalGenerator
         var unityRoot = sourcePath.Replace(sourcePath.Substring(sourcePath.IndexOf("Assets")), "");
 
         byte? type = null;
+        ulong? loop = null;
         var relativePath = string.Empty;
         var filePath = string.Empty;
         HashSet<string> extensions = default!;
         foreach (var atr in typeSymbol.GetAttributes())
         {
-            if (atr?.AttributeClass?.ToDisplayString() == AtrDisp &&
-                atr.ConstructorArguments.Length == 3)
+            if (atr?.AttributeClass?.ToDisplayString() == AtrDisp)
             {
-                type = (byte)atr.ConstructorArguments[0].Value!;
-                if (!KeyGenSet.Contains(type.Value))
+                switch (atr.ConstructorArguments.Length)
                 {
-                    type = null;
+                    case 3:
+                        type = (byte)atr.ConstructorArguments[0].Value!;
+                        if (!KeyGenSet.Contains(type.Value))
+                        {
+                            type = null;
+                        }
+                        relativePath = atr.ConstructorArguments[1].Value!.ToString();
+                        filePath = unityRoot + relativePath;
+                        extensions = new(atr.ConstructorArguments[2].Values.Select(x => x.Value!.ToString()));
+                        break;
+                    case 4:
+                        type = (byte)atr.ConstructorArguments[0].Value!;
+                        if (!KeyGenSet.Contains(type.Value))
+                        {
+                            type = null;
+                        }
+                        loop = (ulong)atr.ConstructorArguments[1].Value!;
+                        relativePath = atr.ConstructorArguments[2].Value!.ToString();
+                        filePath = unityRoot + relativePath;
+                        extensions = new(atr.ConstructorArguments[3].Values.Select(x => x.Value!.ToString()));
+                        break;
+                    default:
+                        continue;
                 }
-                relativePath = atr.ConstructorArguments[1].Value!.ToString();
-                filePath = unityRoot + relativePath;
-                extensions = new(atr.ConstructorArguments[2].Values.Select(x => x.Value!.ToString()));
                 break;
             }
         }
@@ -186,6 +204,8 @@ public sealed class KeyGenerator : IIncrementalGenerator
         }
 
         var count = SerialHash.Get(relativePath);
+        loop ??= KeyGenHash;
+
         var isNamespace = !typeSymbol.ContainingNamespace.IsGlobalNamespace;
 
         context.AddSource($"{className}.UlKeyGen.g.cs", $$"""
@@ -194,8 +214,8 @@ using Ulenv;
 {{(isNamespace ? $$"""namespace {{typeSymbol.ContainingNamespace}} {""" : "")}}
 {{accessibility}} partial class {{className}} : IResolvable
 {
-  public static Unique Unique => new({{count}}, {{KeyGenHash}});
-  Unique IResolvable.Unique => new({{count}}, {{KeyGenHash}});
+  public static Unique Unique => new({{count}}, {{loop}});
+  Unique IResolvable.Unique => new({{count}}, {{loop}});
 {{sb}}
 }
 {{(isNamespace ? "}" : "")}}
@@ -224,6 +244,11 @@ namespace {{Ns}}
         /// <param name="filePath">relative path starting with 'Assets'</param>
         /// <param name="extensions">file extensions to track</param>
         public {{Atr}}(byte type, string filePath, params string[] extensions) { }
+
+        /// <param name="loop">second argument of 'Unique' constructor.</param>
+        /// <param name="filePath">relative path starting with 'Assets'</param>
+        /// <param name="extensions">file extensions to track</param>
+        public {{Atr}}(byte type, ulong loop, string filePath, params string[] extensions) { }
     }
 }
 """;
