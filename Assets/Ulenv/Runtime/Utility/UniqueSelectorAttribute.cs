@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 #pragma warning disable IDE0001
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -8,36 +9,69 @@ using UnityEngine;
 
 namespace Ulenv
 {
-    /// <summary>
-    /// required inherit 'IResolvable'.
-    /// </summary>
     public sealed class UniqueSelectorAttribute : UnityEngine.PropertyAttribute
     {
-        public readonly System.Type Type;
+        public readonly System.Type Type, UniqueGenType;
+        public readonly string RelativePath, SearchPattern;
+        public readonly System.IO.SearchOption Option;
+        /// <param name="type">required inherit 'IResolvable'.</param>
         public UniqueSelectorAttribute(System.Type type) => Type = type;
+        public UniqueSelectorAttribute(
+            string relativePath,
+            string searchPattern = "*",
+            System.IO.SearchOption option = SearchOption.TopDirectoryOnly,
+            System.Type uniqueGenType = null)
+        {
+            RelativePath = relativePath;
+            SearchPattern = searchPattern;
+            Option = option;
+            UniqueGenType = uniqueGenType;
+        }
     }
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(UniqueSelectorAttribute))]
     sealed class UniqueSelectorAttributeDrawer : PropertyDrawer
     {
-        MonoScript[] scripts;
         string[] scriptNames;
         Unique[] uniques;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (scripts == null)
+            var atr = attribute as UniqueSelectorAttribute;
+            if (scriptNames == null)
             {
-                scripts = GetScripts((attribute as UniqueSelectorAttribute).Type);
-                scriptNames = scripts
-                    .Select(x => x?.GetClass().Name ?? "None...")
-                    .ToArray();
-                uniques = scripts
-                    .Select(x => x?.GetClass())
-                    .Where(x => x != null)
-                    .Select(x => ((IResolvable)Activator.CreateInstance(x)).Unique)
-                    .Prepend(Unique.Zero)
-                    .ToArray();
+                if (atr.Type != null)
+                {
+                    var scripts = GetScripts(atr.Type);
+                    scriptNames = scripts
+                        .Select(x => x?.GetClass().Name ?? "None...")
+                        .ToArray();
+                    uniques = scripts
+                        .Select(x => x?.GetClass())
+                        .Where(x => x != null)
+                        .Select(x => ((IResolvable)Activator.CreateInstance(x)).Unique)
+                        .Prepend(Unique.Zero)
+                        .ToArray();
+                }
+                else if (!string.IsNullOrEmpty(atr.RelativePath))
+                {
+                    var uniqueGen = atr.UniqueGenType == null
+                        ? new UlKeyUniqueGenerator()
+                        : (IUlKeyUniqueGenerator)Activator.CreateInstance(atr.UniqueGenType);
+                    var names = Directory
+                        .GetFiles(atr.RelativePath, atr.SearchPattern, atr.Option)
+                        .Where(x => Path.GetExtension(x) != ".meta")
+                        .Select(x => x.Replace("\\", "/"))
+                        .ToArray();
+                    scriptNames = names
+                        .Select(Path.GetFileNameWithoutExtension)
+                        .Prepend("None...")
+                        .ToArray();
+                    uniques = names
+                        .Select(x => (Unique)uniqueGen.Generate(x))
+                        .Prepend(Unique.Zero)
+                        .ToArray();
+                }
             }
 
             position.width /= 3;
