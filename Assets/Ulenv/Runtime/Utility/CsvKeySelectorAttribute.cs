@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 #pragma warning disable IDE0001
+#pragma warning disable IDE0002
 using System;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Ulenv
             string relativePath,
             string searchPattern = "*",
             char separator = ',',
-            System.IO.SearchOption option = SearchOption.TopDirectoryOnly,
+            System.IO.SearchOption option = System.IO.SearchOption.TopDirectoryOnly,
             System.Type uniqueGenType = null)
         {
             RelativePath = relativePath;
