@@ -37,14 +37,18 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
     {
         for (int i = 0; i < capacity; i++)
             ptr[i] = default;
-        length = capacity;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Clear() => length = 0;
+    public void Clear()
+    {
+        for (int i = 0; i < length; i++)
+            ptr[i].Dispose();
+        length = 0;
+    }
     public void Dispose()
     {
         if (ptr == null) return;
-        for (int i = 0; i < capacity; i++)
+        for (int i = 0; i < length; i++)
             ptr[i].Dispose();
         Marshal.FreeHGlobal((IntPtr)ptr);
         ptr = null;
