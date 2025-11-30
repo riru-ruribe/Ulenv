@@ -6,7 +6,7 @@ namespace Ulenv;
 
 public unsafe struct UlUnsafeCallbackArray : IDisposable
 {
-    UlUnsafeCallback* ptr;
+    IntPtr iptr;
     readonly int capacity;
     int length;
     public static UlUnsafeCallbackArray Dummy = new();
@@ -18,11 +18,12 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
     public readonly bool IsValid
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => ptr != null;
+        get => iptr != IntPtr.Zero;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void Invoke(object args)
     {
+        var ptr = (UlUnsafeCallback*)iptr;
         for (int i = 0; i < length; i++)
             ptr[i].Invoke(args, i);
     }
@@ -30,33 +31,37 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
     public void Add(UlUnsafeCallback value)
     {
         if (length >= capacity) return;
+        var ptr = (UlUnsafeCallback*)iptr;
         ptr[length++] = value;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Fill()
+    public readonly void Fill()
     {
+        var ptr = (UlUnsafeCallback*)iptr;
         for (int i = 0; i < capacity; i++)
             ptr[i] = default;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear()
     {
+        var ptr = (UlUnsafeCallback*)iptr;
         for (int i = 0; i < length; i++)
             ptr[i].Dispose();
         length = 0;
     }
     public void Dispose()
     {
-        if (ptr == null) return;
+        if (iptr == IntPtr.Zero) return;
+        var ptr = (UlUnsafeCallback*)iptr;
         for (int i = 0; i < length; i++)
             ptr[i].Dispose();
-        Marshal.FreeHGlobal((IntPtr)ptr);
-        ptr = null;
+        Marshal.FreeHGlobal(iptr);
+        iptr = IntPtr.Zero;
         length = 0;
     }
     public UlUnsafeCallbackArray(int capacity)
     {
-        ptr = (UlUnsafeCallback*)Marshal.AllocHGlobal(UlUnsafeCallback.Size * capacity);
+        iptr = Marshal.AllocHGlobal(UlUnsafeCallback.Size * capacity);
         this.capacity = capacity;
         length = 0;
     }
