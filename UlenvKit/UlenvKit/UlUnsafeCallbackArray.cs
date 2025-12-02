@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Ulenv;
@@ -10,35 +9,23 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
     readonly int capacity;
     int length;
     public static UlUnsafeCallbackArray Dummy = new();
-    public readonly int Length
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => length;
-    }
-    public readonly bool IsValid
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => ptr != null;
-    }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly int Length => length;
+    public readonly bool IsValid => ptr != null;
     public readonly void Invoke(object args)
     {
         for (int i = 0; i < length; i++)
             ptr[i].Invoke(args, i);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(UlUnsafeCallback value)
     {
         if (length >= capacity) return;
         ptr[length++] = value;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Fill()
     {
         for (int i = 0; i < capacity; i++)
             ptr[i] = default;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear()
     {
         for (int i = 0; i < length; i++)
