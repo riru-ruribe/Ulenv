@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Ulenv;
 
-public unsafe struct UlUnsafeCallbackArray : IDisposable
+public unsafe struct UlUnsafeCallbackArray<T> : IDisposable where T : unmanaged
 {
-    UlUnsafeCallback* ptr;
+    UlUnsafeCallback<T>* ptr;
     readonly int capacity;
     int length;
     public readonly int Length => length;
@@ -15,7 +15,7 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
         for (int i = 0; i < length; i++)
             ptr[i].Invoke(args, i);
     }
-    public void Add(UlUnsafeCallback value)
+    public void Add(UlUnsafeCallback<T> value)
     {
         if (length >= capacity) return;
         ptr[length++] = value;
@@ -25,24 +25,17 @@ public unsafe struct UlUnsafeCallbackArray : IDisposable
         for (int i = 0; i < capacity; i++)
             ptr[i] = default;
     }
-    public void Clear()
-    {
-        for (int i = 0; i < length; i++)
-            ptr[i].Dispose();
-        length = 0;
-    }
+    public void Clear() => length = 0;
     public void Dispose()
     {
         if (ptr == null) return;
-        for (int i = 0; i < length; i++)
-            ptr[i].Dispose();
         Marshal.FreeHGlobal((IntPtr)ptr);
         ptr = null;
         length = 0;
     }
     public UlUnsafeCallbackArray(int capacity)
     {
-        ptr = (UlUnsafeCallback*)Marshal.AllocHGlobal(UlUnsafeCallback.Size * capacity);
+        ptr = (UlUnsafeCallback<T>*)Marshal.AllocHGlobal(UlUnsafeCallback<T>.Size * capacity);
         this.capacity = capacity;
         length = 0;
     }
