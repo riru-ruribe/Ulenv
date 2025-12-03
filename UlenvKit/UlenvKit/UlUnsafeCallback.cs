@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Ulenv;
 
 public unsafe readonly struct UlUnsafeCallback : IDisposable
 {
-    internal static readonly int Size = Marshal.SizeOf<UlUnsafeCallback>();
+    internal static readonly int Size = Unsafe.SizeOf<UlUnsafeCallback>();
     readonly GCHandle handle;
     readonly IntPtr dlg;
     public void Invoke(object args, int i) => ((delegate*<object, object, int, void>)dlg)(handle.Target, args, i);
