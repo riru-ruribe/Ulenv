@@ -5,6 +5,8 @@ namespace Ulenv
 {
     public unsafe static class UlCallbackExtensions
     {
+        static readonly object @default = new();
+
         public static UlUnsafeCallback ToUlUnsafeCallback<T>(this object mc)
             where T : unmanaged, IUlCallback
         {
@@ -30,6 +32,10 @@ namespace Ulenv
             static void dlg(object obj, object args, int code) => new T().Recept(obj, args, code);
             h.Callback = new(mc, &dlg, ct);
         }
+
+        public static void Register<T>(this IUlCallbackHolder h)
+            where T : unmanaged, IUlCallback
+            => Register<T>(h, @default, h.destroyCancellationToken);
 
         public static void Register<T>(this IUlCallbackHolder h, object mc)
             where T : unmanaged, IUlCallback
