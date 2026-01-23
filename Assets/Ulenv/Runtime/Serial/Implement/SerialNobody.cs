@@ -11,7 +11,7 @@ namespace Ulenv
     {
         [SerializeReference, InterfaceField] INobodyResolvable resolvable = default;
         public override SerialNobody Value => this;
-        void IAwakable.Awaken(IUlenv env, IModuleMap moduleMap) => resolvable.Awaken(env, moduleMap);
+        void IAwakable.Awaken(IModuleMap moduleMap) => resolvable.Awaken(moduleMap);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Notify() => resolvable.OnNotify();
         public void Dispose() => resolvable.OnDestroy();

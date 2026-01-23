@@ -5,6 +5,6 @@
     /// </summary>
     public interface IAwakable
     {
-        void Awaken(IUlenv env, IModuleMap moduleMap);
+        void Awaken(IModuleMap moduleMap);
     }
 }
