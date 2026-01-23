@@ -1,4 +1,6 @@
-﻿using System;
+﻿#pragma warning disable IDE0079
+#pragma warning disable IDE0005
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Ulenv;

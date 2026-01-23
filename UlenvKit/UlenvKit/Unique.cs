@@ -15,7 +15,7 @@ public readonly struct Unique : IEquatable<Unique>, IComparable<Unique>
     public bool Equals(Unique other) => count == other.count && loop == other.loop;
     public int CompareTo(Unique other) => this > other ? 1 : (this < other ? -1 : 0);
     public override bool Equals(object o) => throw new NotImplementedException();
-    public override int GetHashCode() => 0;
+    public override int GetHashCode() => HashCode.Combine(count, loop);
     public override string ToString() => $"{loop},{count}";
     public Unique(Count count, Loop loop)
     {
@@ -41,7 +41,7 @@ public struct SerialUnique : IEquatable<SerialUnique>
     public Loop loop;
     public readonly bool Equals(SerialUnique other) => count == other.count && loop == other.loop;
     public readonly override bool Equals(object o) => throw new NotImplementedException();
-    public readonly override int GetHashCode() => 0;
+    public readonly override int GetHashCode() => HashCode.Combine(count, loop);
     public readonly override string ToString() => $"{loop},{count}";
     public SerialUnique(Count count, Loop loop)
     {

@@ -12,6 +12,13 @@ public static class ModuleScopeExtensions
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ModuleScope Resolve<T>(this IModuleMap self, T value, UniqueHelper<T> helper)
+    {
+        self[helper] = value;
+        return new(self, helper);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ModuleScope Resolve<T>(this IModuleMap self, T value) where T : IResolvable
     {
         self[value.Unique] = value;
