@@ -41,12 +41,6 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
             return;
         }
 
-        if (!typeNode.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword)))
-        {
-            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.E0002, typeNode.Identifier.GetLocation(), typeSymbol.Name));
-            return;
-        }
-
         var count = SerialHash.Get(typeSymbol.ToDisplayString());
         var loop = 0uL;
         var ignoreResolvable = false;
@@ -61,6 +55,12 @@ public sealed class ModuleResolvableGenerator : IIncrementalGenerator
                     ignoreResolvable = bool.Parse(atr.ConstructorArguments[1].Value!.ToString());
                 }
             }
+        }
+
+        if (!ignoreResolvable && !typeNode.Modifiers.Any(x => x.IsKind(SyntaxKind.PartialKeyword)))
+        {
+            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.E0002, typeNode.Identifier.GetLocation(), typeSymbol.Name));
+            return;
         }
 
         var isNamespace = !typeSymbol.ContainingNamespace.IsGlobalNamespace;
