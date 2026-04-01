@@ -32,6 +32,12 @@ namespace Ulenv
             }
         }
 
+        public bool IsValidCallback
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => callback.IsValid;
+        }
+
         UlCallback IUlCallbackHolder.Callback { set => callback = value; }
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
