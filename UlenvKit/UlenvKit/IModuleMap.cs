@@ -16,4 +16,6 @@ public interface IModuleMap
     bool Remove(Unique key);
     bool Remove(Unique key, out object value);
     bool TryGetValue<T>(Unique key, out T value);
+    void Awaken();
+    void Reawaken();
 }

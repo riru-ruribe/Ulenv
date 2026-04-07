@@ -3,9 +3,8 @@
     /// <summary>
     /// 自由記述型解決モデルです
     /// </summary>
-    public interface INobodyResolvable : IAwakable
+    public interface INobodyResolvable : IAwakable, IReawakable
     {
         void OnDestroy();
-        void OnNotify();
     }
 }
