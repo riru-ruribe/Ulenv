@@ -34,8 +34,9 @@ namespace Ulenv
     [CustomPropertyDrawer(typeof(CsvKeySelectorAttribute))]
     sealed class CsvKeySelectorAttributeDrawer : PropertyDrawer
     {
-        string[] csvPathes, csvNames, keyNames = Array.Empty<string>();
+        string[] csvPathes, csvNames, keyNames = Array.Empty<string>(), texts = Array.Empty<string>();
         Unique[] csvUniques;
+        static readonly GUIStyle style = new();
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -63,8 +64,10 @@ namespace Ulenv
                     .ToArray();
             }
 
+            var w = position.width;
             position.width /= 5;
-            GUI.Label(position, property.displayName);
+            style.normal.textColor = Color.white;
+            GUI.Label(position, property.displayName, style);
 
             position.x += position.width;
             position.width *= 2;
@@ -85,9 +88,14 @@ namespace Ulenv
             cur = r.index;
             if (r.unique != Unique.Zero && keyNames.Length == 0)
             {
-                keyNames = File.ReadLines(csvPathes[next])
+                var lines = File.ReadLines(csvPathes[next]);
+                keyNames = lines
                     .Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith('#') && x.Contains(atr.Separator))
                     .Select(x => x.Split(atr.Separator)[0].Trim())
+                    .ToArray();
+                texts = lines
+                    .Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith('#') && x.Contains(atr.Separator))
+                    .Select(x => x.Split(atr.Separator)[1].Trim())
                     .ToArray();
             }
             next = EditorGUI.Popup(position, cur, keyNames);
@@ -96,6 +104,17 @@ namespace Ulenv
                 property.boxedValue = new UniqueKeyResult(r.unique, next);
                 property.serializedObject.ApplyModifiedProperties();
             }
+
+            position.width = w;
+            position.x = 0f;
+            position.y += position.height * 0.5f;
+            style.normal.textColor = new(1f, 1f, 1f, 0.5f);
+            GUI.Label(position, next < texts.Length ? texts[next] : string.Empty, style);
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return base.GetPropertyHeight(property, label) * 2f;
         }
     }
 #endif
